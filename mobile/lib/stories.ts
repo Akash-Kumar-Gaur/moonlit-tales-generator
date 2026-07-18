@@ -8,10 +8,7 @@ import {
 } from "./options";
 
 export type { AgeGroup, InterestId, LessonId };
-export type {
-  StoryInterest,
-  StoryLesson,
-} from "./options";
+export type { StoryInterest, StoryLesson } from "./options";
 export {
   AGES,
   INTEREST_OPTIONS,
@@ -29,7 +26,6 @@ export interface Story {
   date: string;
   interest: InterestId;
   paragraphs: string[];
-  /** Language the story content was written in (optional for legacy seeds). */
   language?: Language;
 }
 
@@ -95,13 +91,10 @@ export const TONIGHT_STORY: Story = {
 export function getEveningGreeting(
   lang: Language = "en",
   now: Date = new Date(),
-): {
-  eyebrow: string;
-  headline: string;
-} {
+): { eyebrow: string; headline: string } {
   const hour = now.getHours();
   const timeLabel = now
-    .toLocaleTimeString(lang === "hi" ? "hi-IN" : undefined, {
+    .toLocaleTimeString(lang === "hi" ? "hi-IN" : "en-IN", {
       hour: "numeric",
       minute: "2-digit",
     })
@@ -131,7 +124,6 @@ export function getEveningGreeting(
   };
 }
 
-/** Display label for a stored story date string (seed dates) or pass-through. */
 export function localizeStoryDate(date: string, lang: Language): string {
   const map: Record<string, string> = {
     Tonight: t(lang, "dateTonight"),
@@ -146,4 +138,15 @@ export function localizeStoryDate(date: string, lang: Language): string {
 
 export function displayInterest(story: Story, lang: Language): string {
   return interestLabel(story.interest, lang);
+}
+
+export function findStory(
+  storyId: string,
+  library: Story[] = [],
+): Story | undefined {
+  if (storyId === "tonight") return TONIGHT_STORY;
+  return (
+    library.find((s) => s.id === storyId) ??
+    RECENT_STORIES.find((s) => s.id === storyId)
+  );
 }

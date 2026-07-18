@@ -88,9 +88,25 @@
   --input: hsl(0 0% 100% / 0.06);
   --ring: hsl(38 90% 65% / 0.5);
 
-  --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
-  --font-sans: "Lora", ui-serif, Georgia, serif;
+  --font-serif-en: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-sans-en: "Lora", ui-serif, Georgia, serif;
+  --font-serif-hi: "Tiro Devanagari Hindi", "Noto Serif Devanagari", ui-serif, serif;
+  --font-sans-hi: "Hind", "Noto Sans Devanagari", ui-sans-serif, sans-serif;
+
+  --font-serif: var(--font-serif-en);
+  --font-sans: var(--font-sans-en);
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html[data-lang="hi"] {
+  --font-serif: var(--font-serif-hi);
+  --font-sans: var(--font-sans-hi);
+}
+
+/* Devanagari doesn't benefit from Latin-style tracking / forced uppercase */
+html[data-lang="hi"] .tracking-wide-latin {
+  letter-spacing: 0.05em;
+  text-transform: none;
 }
 
 @layer base {

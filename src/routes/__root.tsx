@@ -11,21 +11,23 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { initLanguage, useTranslation } from "../lib/i18n";
 
 function NotFoundComponent() {
+  const { t } = useTranslation();
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-6 text-center">
       <div className="max-w-sm space-y-4">
-        <p className="text-xs uppercase tracking-[0.3em] text-candle/80">Lost among stars</p>
-        <h1 className="font-serif text-4xl italic">This page has drifted off to sleep.</h1>
-        <p className="text-sm text-muted-foreground">
-          The page you're looking for isn't here. Let's head back to the nightstand.
+        <p className="text-xs uppercase tracking-[0.3em] text-candle/80">
+          {t("lostAmongStars")}
         </p>
+        <h1 className="font-serif text-4xl italic">{t("pageAsleep")}</h1>
+        <p className="text-sm text-muted-foreground">{t("pageAsleepBody")}</p>
         <Link
           to="/"
           className="inline-flex items-center justify-center rounded-2xl bg-primary px-6 py-3 text-sm font-medium text-primary-foreground"
         >
-          Back home
+          {t("backHome")}
         </Link>
       </div>
     </div>
@@ -35,6 +37,7 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  const { t } = useTranslation();
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
@@ -42,10 +45,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-6 text-center">
       <div className="max-w-sm space-y-4">
-        <h1 className="font-serif text-3xl italic">The candle flickered.</h1>
-        <p className="text-sm text-muted-foreground">
-          Something interrupted the story. Try again in a moment.
-        </p>
+        <h1 className="font-serif text-3xl italic">{t("candleFlickered")}</h1>
+        <p className="text-sm text-muted-foreground">{t("candleFlickeredBody")}</p>
         <div className="flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -54,13 +55,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-2xl bg-primary px-5 py-3 text-sm font-medium text-primary-foreground"
           >
-            Try again
+            {t("tryAgain")}
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-2xl border border-border bg-card px-5 py-3 text-sm font-medium text-foreground"
           >
-            Go home
+            {t("goHome")}
           </a>
         </div>
       </div>
@@ -72,7 +73,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1, viewport-fit=cover",
+      },
       { name: "theme-color", content: "#0d1017" },
       { title: "Moonlit Tales — Personalized bedtime stories" },
       {
@@ -80,7 +84,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "A cozy bedtime companion for parents. Craft a personalized story for your child in seconds and settle in for a calm goodnight.",
       },
-      { property: "og:title", content: "Moonlit Tales — Personalized bedtime stories" },
+      {
+        property: "og:title",
+        content: "Moonlit Tales — Personalized bedtime stories",
+      },
       {
         property: "og:description",
         content:
@@ -93,10 +100,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+      },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Lora:wght@400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Lora:wght@400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&family=Hind:wght@400;500;600&display=swap",
       },
     ],
   }),
@@ -108,7 +119,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-lang="en">
       <head>
         <HeadContent />
       </head>
@@ -120,10 +131,18 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function LanguageBoot() {
+  useEffect(() => {
+    initLanguage();
+  }, []);
+  return null;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
+      <LanguageBoot />
       <Outlet />
     </QueryClientProvider>
   );

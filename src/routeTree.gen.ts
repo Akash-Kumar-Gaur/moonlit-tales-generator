@@ -9,18 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ApiGenerateStoryRouteImport } from './routes/api/generate-story'
 import { Route as ReadStoryIdRouteImport } from './routes/read.$storyId'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ApiGenerateStoryRoute = ApiGenerateStoryRouteImport.update({
+  id: '/api/generate-story',
+  path: '/api/generate-story',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReadStoryIdRoute = ReadStoryIdRouteImport.update({
@@ -32,35 +38,47 @@ const ReadStoryIdRoute = ReadStoryIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/generate-story': typeof ApiGenerateStoryRoute
   '/read/$storyId': typeof ReadStoryIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/generate-story': typeof ApiGenerateStoryRoute
   '/read/$storyId': typeof ReadStoryIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/generate-story': typeof ApiGenerateStoryRoute
   '/read/$storyId': typeof ReadStoryIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sitemap.xml' | '/read/$storyId'
+  fullPaths: '/' | '/sitemap.xml' | '/api/generate-story' | '/read/$storyId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sitemap.xml' | '/read/$storyId'
-  id: '__root__' | '/' | '/sitemap.xml' | '/read/$storyId'
+  to: '/' | '/sitemap.xml' | '/api/generate-story' | '/read/$storyId'
+  id:
+    '__root__' | '/' | '/sitemap.xml' | '/api/generate-story' | '/read/$storyId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiGenerateStoryRoute: typeof ApiGenerateStoryRoute
   ReadStoryIdRoute: typeof ReadStoryIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -68,11 +86,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/api/generate-story': {
+      id: '/api/generate-story'
+      path: '/api/generate-story'
+      fullPath: '/api/generate-story'
+      preLoaderRoute: typeof ApiGenerateStoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/read/$storyId': {
@@ -88,6 +106,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiGenerateStoryRoute: ApiGenerateStoryRoute,
   ReadStoryIdRoute: ReadStoryIdRoute,
 }
 export const routeTree = rootRouteImport

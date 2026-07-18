@@ -15,6 +15,20 @@ dist-ssr
 .tanstack/**
 .nitro
 *.local
+.env
+.env.*
+!.env.example
+
+# Expo / EAS
+.expo
+dist
+mobile/android
+mobile/ios
+mobile/credentials.json
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
 
 # Wrangler / Cloudflare
 .wrangler/
