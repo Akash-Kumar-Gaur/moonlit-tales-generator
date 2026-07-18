@@ -70,8 +70,8 @@ async function callOnce(body: GenerateStoryBody): Promise<StoryOutput> {
   const client = getClient();
   const response = await client.responses.parse({
     model: MODEL,
-    temperature: 0.9,
-    max_output_tokens: 1200,
+    // gpt-5.6 rejects temperature; use default sampling.
+    max_output_tokens: 4096,
     input: [
       {
         role: "system",
