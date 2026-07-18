@@ -35,8 +35,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
-    "eas-cli": "^21.0.2",
-    "typescript": "~6.0.3"
+    "typescript": "~5.9.2"
   },
   "scripts": {
     "start": "expo start",
@@ -44,9 +43,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "build:dev": "eas build --profile development --platform android",
-    "build:preview": "eas build --profile preview --platform android",
-    "build:prod": "eas build --profile production --platform all"
+    "build:dev": "npx eas-cli@latest build --profile development --platform android",
+    "build:preview": "npx eas-cli@latest build --profile preview --platform android",
+    "build:prod": "npx eas-cli@latest build --profile production --platform all"
   },
   "private": true
 }
